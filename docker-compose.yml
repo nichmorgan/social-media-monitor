@@ -13,6 +13,7 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
       - .docker/init-n8n-db.sh:/docker-entrypoint-initdb.d/01-init-n8n-db.sh
+      - ./n8n/knowledge/database-schema.sql:/docker-entrypoint-initdb.d/02-social-media-schema.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${N8N_DB_USER:-n8n} -d ${N8N_DB_NAME:-n8n}"]
       interval: 5s

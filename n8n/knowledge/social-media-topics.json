@@ -1,0 +1,49 @@
+{
+  "monitoring_topics": {
+    "sustainability": {
+      "keywords": ["sustainability", "sustainable", "eco-friendly", "green", "environment"],
+      "hashtags": ["#sustainability", "#sustainable", "#ecofriendly", "#green", "#environment"],
+      "intent_categories": ["awareness", "advocacy", "complaint", "promotion", "educational"]
+    },
+    "climate_change": {
+      "keywords": ["climate change", "global warming", "carbon footprint", "emissions", "greenhouse gas"],
+      "hashtags": ["#climatechange", "#globalwarming", "#carbonfootprint", "#emissions", "#greenhousegas"],
+      "intent_categories": ["alarm", "activism", "denial", "education", "solutions"]
+    },
+    "renewable_energy": {
+      "keywords": ["renewable energy", "solar power", "wind energy", "clean energy", "green energy"],
+      "hashtags": ["#renewableenergy", "#solarpower", "#windenergy", "#cleanenergy", "#greenenergy"],
+      "intent_categories": ["investment", "technology", "policy", "adoption", "innovation"]
+    },
+    "esg": {
+      "keywords": ["ESG", "environmental social governance", "corporate responsibility", "sustainable business"],
+      "hashtags": ["#ESG", "#corporateresponsibility", "#sustainablebusiness", "#impactinvesting"],
+      "intent_categories": ["compliance", "reporting", "investment", "criticism", "improvement"]
+    }
+  },
+  "sentiment_mapping": {
+    "positive": ["love", "amazing", "great", "excellent", "fantastic", "wonderful", "perfect"],
+    "negative": ["hate", "terrible", "awful", "horrible", "disappointing", "waste", "scam"],
+    "neutral": ["okay", "fine", "average", "normal", "standard", "typical"]
+  },
+  "intent_definitions": {
+    "awareness": "Posts that aim to educate or inform about the topic",
+    "advocacy": "Posts that actively promote or support the cause",
+    "complaint": "Posts expressing dissatisfaction or criticism",
+    "promotion": "Posts marketing products/services related to the topic",
+    "educational": "Posts sharing knowledge or information",
+    "alarm": "Posts expressing urgency or concern",
+    "activism": "Posts calling for action or change",
+    "denial": "Posts questioning or rejecting the topic",
+    "solutions": "Posts offering or discussing solutions",
+    "investment": "Posts about financial opportunities",
+    "technology": "Posts discussing technical aspects",
+    "policy": "Posts about regulations or policies",
+    "adoption": "Posts about implementation or usage",
+    "innovation": "Posts about new developments",
+    "compliance": "Posts about meeting requirements",
+    "reporting": "Posts about disclosure or transparency",
+    "criticism": "Posts expressing negative views",
+    "improvement": "Posts about enhancing practices"
+  }
+}
