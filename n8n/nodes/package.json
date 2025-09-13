@@ -1,0 +1,13 @@
+{
+  "name": "installed-nodes",
+  "private": true,
+  "dependencies": {
+    "n8n-nodes-advbox": "0.3.84",
+    "n8n-nodes-data-validation": "1.0.1",
+    "n8n-nodes-duckduckgo-search": "30.0.4",
+    "n8n-nodes-globals": "1.1.0",
+    "n8n-nodes-mcp": "0.1.29",
+    "n8n-nodes-text-manipulation": "1.4.0",
+    "n8n-nodes-qdrant": "0.1.16"
+  }
+}

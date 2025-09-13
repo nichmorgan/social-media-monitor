@@ -1,0 +1,146 @@
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${N8N_DB_USER:-n8n}
+      POSTGRES_PASSWORD: ${N8N_DB_PASSWORD:-n8n}
+      POSTGRES_DB: ${N8N_DB_NAME:-n8n}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - .docker/init-n8n-db.sh:/docker-entrypoint-initdb.d/01-init-n8n-db.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${N8N_DB_USER:-n8n} -d ${N8N_DB_NAME:-n8n}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    # ===== OPTIMIZED POSTGRESQL CONFIGURATIONS =====
+    command: >
+      postgres
+      -c max_connections=300
+      -c shared_buffers=512MB
+      -c effective_cache_size=2GB
+      -c maintenance_work_mem=128MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=32MB
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=32MB
+
+  redis:
+    image: redis:8.2.1
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  n8n:
+    build:
+      dockerfile: n8n.dockerfile
+    restart: always
+    ports:
+      - "5678:5678"
+    env_file:
+      - .env
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${N8N_DB_NAME:-n8n}
+      - DB_POSTGRESDB_USER=${N8N_DB_USER:-n8n}
+      - DB_POSTGRESDB_PASSWORD=${N8N_DB_PASSWORD:-n8n}
+      - N8N_HOST=0.0.0.0
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
+      - N8N_LOG_LEVEL=${N8N_LOG_LEVEL:-debug}
+      - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER:-n8n@admin.com}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD:-n8n}
+      - N8N_SECURE_COOKIE=false
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+      - OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS=true
+      - EXECUTIONS_MODE=queue
+      - QUEUE_BULL_REDIS_HOST=redis
+      - QUEUE_BULL_REDIS_PORT=6379
+      - N8N_BINARY_DATA_MODE=filesystem
+      - N8N_DEFAULT_BINARY_DATA_MODE=filesystem
+      - N8N_PAYLOAD_DEFAULT_MAX_SIZE=1073741824
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./n8n/data/:/data:ro
+      - ./n8n/knowledge:/knowledge:ro
+      - ./n8n/flows/:/flows:rw
+      - ./n8n/credentials:/credentials:rw
+      - ./n8n/nodes/package.json:/home/node/.n8n/nodes/package.json
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  n8n-worker:
+    build:
+      dockerfile: n8n.dockerfile
+    restart: unless-stopped
+    command: worker
+    env_file:
+      - .env
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${N8N_DB_NAME:-n8n}
+      - DB_POSTGRESDB_USER=${N8N_DB_USER:-n8n}
+      - DB_POSTGRESDB_PASSWORD=${N8N_DB_PASSWORD:-n8n}
+      - N8N_HOST=0.0.0.0
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
+      - N8N_LOG_LEVEL=${N8N_LOG_LEVEL:-debug}
+      - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER:-n8n@admin.com}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD:-n8n}
+      - N8N_SECURE_COOKIE=false
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+      - OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS=true
+      - EXECUTIONS_MODE=queue
+      - QUEUE_BULL_REDIS_HOST=redis
+      - QUEUE_BULL_REDIS_PORT=6379
+      - N8N_BINARY_DATA_MODE=filesystem
+      - N8N_DEFAULT_BINARY_DATA_MODE=filesystem
+      - N8N_PAYLOAD_DEFAULT_MAX_SIZE=1073741824
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./n8n/data/:/data:ro
+      - ./n8n/knowledge:/knowledge:ro
+      - ./n8n/flows/:/flows:rw
+      - ./n8n/credentials:/credentials:rw
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: pepa-linha-dark
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  n8n_data:
+  pg_data:
+  redis_data:

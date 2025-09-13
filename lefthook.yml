@@ -1,0 +1,6 @@
+pre-commit:
+  piped: true
+  commands:
+    n8n-workflows-export:
+      run: ./scripts/export-workflows.sh
+      stage_fixed: true

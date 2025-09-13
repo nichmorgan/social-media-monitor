@@ -1,0 +1,32 @@
+{
+	"folders": [
+		{
+			"name": "n8n Project",
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			"**/node_modules": true,
+			"**/__pycache__": true,
+			"**/*.pyc": true
+		},
+		"editor.formatOnSave": true,
+		"editor.tabSize": 2,
+		"editor.insertSpaces": true
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.vscode-json",
+			"ms-vscode.docker",
+			"ms-vscode.makefile-tools",
+			"redhat.vscode-yaml"
+		]
+	}
+}

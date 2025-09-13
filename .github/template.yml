@@ -1,0 +1,30 @@
+name: n8n Project Template
+description: A production-ready template for n8n automation projects with PostgreSQL, Redis, and Docker support
+labels:
+  - n8n
+  - automation
+  - docker
+  - postgresql
+  - redis
+  - workflow
+
+inputs:
+  project_name:
+    description: "What is the name of your project?"
+    default: "my-n8n-project"
+    required: true
+
+  project_description:
+    description: "Brief description of your automation project"
+    default: "An n8n automation project"
+    required: false
+
+  enable_community_nodes:
+    description: "Include community nodes package.json?"
+    type: boolean
+    default: true
+
+  include_knowledge_base:
+    description: "Include knowledge base directory?"
+    type: boolean
+    default: true
